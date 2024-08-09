@@ -2,14 +2,16 @@
 import MainLayout from "@/components/layout/MainLayout";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useCartList from "@/hooks/useCartList";
+import useUserInfo from "@/hooks/useUserInfo";
 import { faHeadset } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const CartPage = () => {
   const [cartList, refetch, isLoading] = useCartList();
+  const [userInfo, ,] = useUserInfo();
   const [instance] = useAxiosSecure();
 
   // const { quantity, increment, decrement, handleInputChange } =
@@ -19,8 +21,12 @@ const CartPage = () => {
   // const toggleActive = (index) => {
   //   setActiveIndex(activeIndex === index ? null : index);
   // };
-  const cartId = localStorage.getItem("cartId") || null;
+  const [cartId, setCartId] = useState(null);
 
+  useEffect(() => {
+    const storedCartId = localStorage.getItem("cartId");
+    setCartId(storedCartId);
+  }, []);
   const handleRemove = async (productId) => {
     try {
       const response = await instance.post(`/cart`, {
@@ -60,151 +66,52 @@ const CartPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cartList?.data?.map((cart) => (
-                      <tr key={cart?.id}>
-                        {cart?.products?.map((pd) => (
-                          <React.Fragment key={pd?.id}>
-                            <td data-label="Product Info">
-                              <div className="product-info-wrapper">
-                                <div className="product-info-img">
-                                  <img
-                                    src="/assets/img/innerpage/cart-img1.png"
-                                    alt=""
+                    {cartList?.data?.products?.map((pd) => (
+                      <tr key={pd?.id}>
+                        <td data-label="Product Info">
+                          <div className="product-info-wrapper">
+                            <div className="product-info-img">
+                              <img
+                                src={
+                                  pd?.image ||
+                                  "/assets/img/innerpage/cart-img1.png"
+                                }
+                                alt={pd?.title}
+                                style={{ height: "100px", objectFit: "cover" }} // Adjusted style for image
+                              />
+                            </div>
+                            <div className="product-info-content">
+                              <h6>{pd?.title}</h6>
+                              <p>
+                                <span>
+                                  <FontAwesomeIcon
+                                    icon={faHeadset}
+                                    className="me-3"
                                   />
-                                </div>
-                                <div className="product-info-content">
-                                  <h6>{pd?.title}</h6>
-                                  <p>
-                                    <span>
-                                      <FontAwesomeIcon
-                                        icon={faHeadset}
-                                        className="me-3"
-                                      />
-                                    </span>
-                                    {pd?.support_for}
-                                  </p>
-                                  <ul>
-                                    <li
-                                      onClick={() => handleRemove(pd?.id)}
-                                      style={{ cursor: "pointer" }}
-                                    >
-                                      remove
-                                    </li>
-                                    {/* <li>
-                                      <div
-                                        className="qty-btn"
-                                        onClick={() => toggleActive(0)}
-                                      >
-                                        quantity
-                                      </div>
-                                      <div
-                                        className={`quantity-area ${
-                                          activeIndex === 0 ? "active" : ""
-                                        }`}
-                                      >
-                                        <div className="quantity">
-                                          <a
-                                            className="quantity__minus"
-                                            style={{ cursor: "pointer" }}
-                                            onClick={decrement}
-                                          >
-                                            <span>
-                                              <i className="bi bi-dash" />
-                                            </span>
-                                          </a>
-                                          <input
-                                            name="quantity"
-                                            type="text"
-                                            className="quantity__input"
-                                            value={quantity}
-                                            onChange={handleInputChange}
-                                          />
-                                          <a
-                                            className="quantity__plus"
-                                            style={{ cursor: "pointer" }}
-                                            onClick={increment}
-                                          >
-                                            <i className="bi bi-plus" />
-                                          </a>
-                                        </div>
-                                      </div>
-                                    </li> */}
-                                  </ul>
-                                </div>
-                              </div>
-                            </td>
-                            <td data-label="Price">
-                              <span>${pd?.price}</span>
-                            </td>
-                          </React.Fragment>
-                        ))}
-                        <td data-label="Total">${cart?.totalPrice}</td>
+                                </span>
+                                {pd?.support_for}
+                              </p>
+                              <ul>
+                                <li
+                                  onClick={() => handleRemove(pd?.id)}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  remove
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                        <td data-label="Price">
+                          <span>${pd?.price}</span>
+                        </td>
                       </tr>
                     ))}
-
-                    {/* <td data-label="Total">${cart?.totalPrice}</td> */}
-                    {/* <tr>
-                      <td data-label="Product Info">
-                        <div className="product-info-wrapper">
-                          <div className="product-info-img">
-                            <img
-                              src="/assets/img/innerpage/cart-img2.png"
-                              alt=""
-                            />
-                          </div>
-                          <div className="product-info-content">
-                            <h6>Fashion Forward</h6>
-                            <p>
-                              <span>SKU: </span>D32-5H23
-                            </p>
-                            <ul>
-                              <li>remove</li>
-                              <li>
-                                <div
-                                  className="qty-btn"
-                                  onClick={() => toggleActive(1)}
-                                >
-                                  quantity
-                                </div>
-                                <div
-                                  className={`quantity-area ${
-                                    activeIndex === 1 ? "active" : ""
-                                  }`}
-                                >
-                                  <div className="quantity">
-                                    <a
-                                      className="quantity__minus"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={decrement}
-                                    >
-                                      <i className="bi bi-dash" />
-                                    </a>
-                                    <input
-                                      name="quantity"
-                                      type="text"
-                                      className="quantity__input"
-                                      value={quantity}
-                                      onChange={handleInputChange}
-                                    />
-                                    <a
-                                      className="quantity__plus"
-                                      style={{ cursor: "pointer" }}
-                                      onClick={increment}
-                                    >
-                                      <i className="bi bi-plus" />
-                                    </a>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
+                    <tr>
+                      <td colSpan="2" data-label="Total">
+                        ${cartList?.data?.totalPrice}
                       </td>
-                      <td data-label="Price">
-                        <span>$214.00</span>
-                      </td>
-                      <td data-label="Total">$214.00</td>
-                    </tr> */}
+                    </tr>
                   </tbody>
                 </table>
                 <Link href="/shop" className="details-button">
@@ -245,8 +152,13 @@ const CartPage = () => {
                       <span>$214.00</span>
                     </li> */}
                   </ul>
+
                   <Link
-                    href="/checkout"
+                    href={
+                      userInfo?.data?.customer
+                        ? "/checkout"
+                        :  "/company-information"
+                    }
                     className="primary-btn1"
                     data-text="Processed Checkout"
                   >

@@ -19,6 +19,7 @@ const ProductDetailsPage = () => {
   const dynamicPart = currentSlug.split("/").pop();
   const [activeTab, setActiveTab] = useState(0);
   const router = useRouter();
+
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
@@ -161,10 +162,10 @@ const ProductDetailsPage = () => {
                   </div>
                 </div> */}
 
-                {cartList?.data[0]?.products?.length > 0 ? (
-                  cartList?.data[0]?.products?.map((pd) => (
+                {cartList?.data?.products?.length > 0 ? (
+                  cartList?.data?.products?.map((pd) => (
                     <div className="product-details-btn" key={pd?.id}>
-                      {pd?.id === dynamicPart ? (
+                      {pd?.id !== Number(dynamicPart) ? (
                         <Link href="/cart" legacyBehavior>
                           <a
                             className="primary-btn1"

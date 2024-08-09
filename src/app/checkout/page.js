@@ -4,9 +4,10 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import useCartList from "@/hooks/useCartList";
 import useCustomerInfo from "@/hooks/useCustomer";
 import useQuantityCounter from "@/hooks/useQuantityCounter";
+import useUserInfo from "@/hooks/useUserInfo";
 import Link from "next/link";
 import { enqueueSnackbar } from "notistack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 const Counter = () => {
   const { quantity, increment, decrement, handleInputChange } =
     useQuantityCounter(1);
@@ -42,8 +43,16 @@ const Counter = () => {
 const CheckoutPage = () => {
   const [instance] = useAxiosSecure();
   const [cartList, refetch, isLoading] = useCartList();
+  const [userInfo, ,] = useUserInfo();
+  const [cartId, setCartId] = useState(null);
 
-  const cartId = localStorage.getItem("cartId") || null;
+  console.log("uu", userInfo);
+
+  useEffect(() => {
+    const storedCartId = localStorage.getItem("cartId");
+    setCartId(storedCartId);
+  }, []);
+
   const handleClick = async () => {
     try {
       const response = await instance.post(`/payment/bkash/create`, { cartId });

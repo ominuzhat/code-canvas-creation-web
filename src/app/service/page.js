@@ -14,7 +14,7 @@ const ServicePage = () => {
   return (
     <MainLayout>
       <div
-        className="service-card-section scroll-margin pt-120 mb-120"
+        className="service-card-section scroll-margin pt-120 mb-120 "
         id="service-section"
       >
         <div className="container">
@@ -22,23 +22,31 @@ const ServicePage = () => {
             {serviceData?.data?.map((service) => (
               <div
                 key={service?.id}
-                className="col-lg-4 col-md-6 wow animate fadeInDown"
+                className="col-lg-4 col-md-6 wow animate fadeInDown "
                 data-wow-delay="200ms"
                 data-wow-duration="1500ms"
               >
-                <div className="service-card two">
+                <div className="service-card two " style={{ height: "400px" }}>
                   <div className="content">
-                    <h4>
-                      <Link href="/service/service-details">
-                        {service?.title}
+                    <h4 style={{ width: "350px" }}>
+                      <Link href={`/service/${service.id}`}>
+                        {service?.title.length > 20
+                          ? `${service.title.slice(0, 21)}`
+                          : service.title}...
                       </Link>
                     </h4>
                     <span
+                      className="mt-2"
                       dangerouslySetInnerHTML={{
                         __html: service?.icon,
                       }}
                     />
-                    <p>{service?.subtitle}</p>
+                    <p>
+                      {" "}
+                      {service?.subtitle.length > 400
+                        ? `${service.subtitle.slice(0, 400)}...`
+                        : service.subtitle}
+                    </p>
                   </div>
                   <Link href={`/service/${service.id}`} className="explore-btn">
                     {" "}

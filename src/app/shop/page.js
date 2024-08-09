@@ -23,10 +23,21 @@ const ShopPage = () => {
                 data-wow-delay="200ms"
                 data-wow-duration="1500ms"
               >
-                <div className="product-card">
+                <div
+                  className="product-card border"
+                  style={{ height: "400px" }}
+                >
                   <div className="product-card-img">
                     <Link href={`/shop/${pd.id}`}>
-                      <img src={pd?.images[0]?.image} alt="" />
+                      <img
+                        style={{
+                          height: "220px",
+                          width: "100%",
+                          objectFit: "cover",
+                        }}
+                        src={pd?.images?.[0]?.image}
+                        alt=""
+                      />
                       <div className="batch">
                         <span>-15%</span>
                       </div>

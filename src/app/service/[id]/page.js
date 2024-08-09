@@ -26,8 +26,6 @@ const ServiceDetails = () => {
     }
   }, [dynamicPart, instance]);
 
-  console.log("Service details:", service?.data);
-
   const { title, description, keyPoints, images } = service?.data || {};
 
   return (

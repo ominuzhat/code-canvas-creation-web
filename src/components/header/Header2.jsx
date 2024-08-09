@@ -502,10 +502,10 @@ const Header2 = () => {
               </div>
               <Link href="/cart" className="primary-btn4 d-xl-flex d-none">
                 <i className="bi bi-cart "></i>
-                {cartList?.data[0]?.products?.length > 0 && (
+                {cartList?.data?.products?.length > 0 && (
                   <span className="pb-2">
                     {" "}
-                    {cartList.data[0].products.length}
+                    {cartList?.data?.products?.length}
                   </span>
                 )}
               </Link>
